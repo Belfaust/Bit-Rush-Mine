@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public Animator animator;
     public Sprite Crosshair;
     bool HoldingBlock = false;
+    public LayerMask MovementCollider;
     BlockType PickedBlockType = BlockType.Empty;
 
     public gameController Controller;
@@ -54,19 +55,18 @@ public class Player : MonoBehaviour
         animator.SetFloat("Vertical", Movement.y);
         animator.SetFloat("Speed", Movement.sqrMagnitude);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Movement, .55f, gameController.Instance.OreDetector);
         if(Vector2.Distance(transform.position, DestPoint.position) <= 0.05f)
             {
                 if (Mathf.Abs(Movement.x) == 1)
                 {
-                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(Movement.x, 0, 0), .2f, gameController.Instance.OreDetector))
+                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(Movement.x, 0, 0), .2f, MovementCollider))
                     {
                         DestPoint.position += new Vector3(Movement.x, 0, 0);
                     }
                 }
                 if(Mathf.Abs(Movement.y) == 1)
                 {
-                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(0, Movement.y, 0), .2f, gameController.Instance.OreDetector))
+                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(0, Movement.y, 0), .2f, MovementCollider))
                     {
                         DestPoint.position += new Vector3(0, Movement.y, 0);
                     }
