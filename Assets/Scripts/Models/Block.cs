@@ -12,6 +12,10 @@ public class Block
     public int GoldValue = 1;
     public GameObject MyGameObject;
 
+    public Block()
+    {
+
+    }
     public Block(int x, int y,GameObject blockGameObject, BlockType blockType)
     {
         this.X = x;
@@ -29,18 +33,9 @@ public class Block
     {
         if(HitPoints < 1&&_Type != BlockType.Empty )
         {
-            gameController Controller = gameController.Instance;
             MyGameObject.GetComponent<BoxCollider2D>().enabled = false;
             MyGameObject.GetComponent<SpriteRenderer>().sprite = gameController.Instance.GrassSprites[Random.Range(0,3)];
-            _Type = BlockType.Empty;
-            if (Controller.BlockList[X + 1, Y]._Type != BlockType.Empty && Controller.BlockList[X + 1, Y].X != Controller.Width - 1)
-                Controller.CheckForNeighbourBlocks(Controller.BlockList[X + 1, Y]);
-            if (Controller.BlockList[X, Y + 1]._Type != BlockType.Empty && Controller.BlockList[X, Y + 1].Y != Controller.Height - 1)
-                Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y + 1]);
-            if (Controller.BlockList[X - 1, Y]._Type != BlockType.Empty && Controller.BlockList[X - 1, Y].X != 0)
-                Controller.CheckForNeighbourBlocks(Controller.BlockList[X - 1, Y]);
-            if (Controller.BlockList[X, Y - 1]._Type != BlockType.Empty && Controller.BlockList[X, Y - 1].Y != 0)
-                Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y - 1]);
+            ChangeType(BlockType.Empty);
         }
 
     }
@@ -66,7 +61,18 @@ public class Block
             HitPoints = 500;
             GoldValue = 150;
         }
-
+        if(_Type != BlockType.Bedrock)
+        {
+            gameController Controller = gameController.Instance;
+            if (Controller.BlockList[X + 1, Y]._Type != BlockType.Empty && Controller.BlockList[X + 1, Y].X != Controller.Width - 1)
+                Controller.CheckForNeighbourBlocks(Controller.BlockList[X + 1, Y]);
+            if (Controller.BlockList[X, Y + 1]._Type != BlockType.Empty && Controller.BlockList[X, Y + 1].Y != Controller.Height - 1)
+                Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y + 1]);
+            if (Controller.BlockList[X - 1, Y]._Type != BlockType.Empty && Controller.BlockList[X - 1, Y].X != 0)
+                Controller.CheckForNeighbourBlocks(Controller.BlockList[X - 1, Y]);
+            if (Controller.BlockList[X, Y - 1]._Type != BlockType.Empty && Controller.BlockList[X, Y - 1].Y != 0)
+                Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y - 1]);
+        }
     }
 
 }

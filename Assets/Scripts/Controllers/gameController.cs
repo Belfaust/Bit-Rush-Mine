@@ -49,15 +49,15 @@ public class gameController : MonoBehaviour
                 Block.name = "Block No." + x + "|" + y;
                 if (y == 0 || y == Height-1 || x == 0 || x == Width-1)
                 {
-                    BlockList[x, y].ChangeType(BlockType.Bedrock);
+                    BlockList[x, y]._Type = BlockType.Bedrock;
                 }
                 else if ((int)(noiseMap[x, y]*100) > 5&&(Random.Range(1,100)>5))
                 {
-                    BlockList[x, y].ChangeType(BlockType.Stone);
+                    BlockList[x, y]._Type = BlockType.Stone;
                 }
                 else
                 {
-                   BlockList[x, y].ChangeType(BlockType.Empty);
+                    BlockList[x, y]._Type = BlockType.Empty;
                 }
             }
         }

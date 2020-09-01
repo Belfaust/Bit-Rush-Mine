@@ -10,15 +10,20 @@ public class Player : MonoBehaviour
     public float Speed = 5f;
     public int PickAxeSpeed= 5;
     Vector2 Movement, HitMarker;
+    public Transform DestPoint;
     public Rigidbody2D rb;
     public GameObject Hitmarker;
     public Animator animator;
+    public Sprite Crosshair;
+    bool HoldingBlock = false;
+    BlockType PickedBlockType = BlockType.Empty;
 
     public gameController Controller;
 
 
     void Start()
     {
+        DestPoint.parent = null;
         if (Instance != null)
         {
             Debug.Log("Err there are 2 instances of gameControllers");
@@ -43,29 +48,37 @@ public class Player : MonoBehaviour
     {
         Movement.x = Input.GetAxisRaw("Horizontal");
         Movement.y = Input.GetAxisRaw("Vertical");
+        transform.position = Vector3.MoveTowards(transform.position, DestPoint.position, Speed * Time.deltaTime);
 
         animator.SetFloat("Horizontal", Movement.x);
         animator.SetFloat("Vertical", Movement.y);
         animator.SetFloat("Speed", Movement.sqrMagnitude);
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Movement, .55f, gameController.Instance.OreDetector);
-        if (hit.collider == null)
-        {
-            if (Movement.x != 0 && Movement.y != 0)
+        if(Vector2.Distance(transform.position, DestPoint.position) <= 0.05f)
             {
-                rb.MovePosition(rb.position + new Vector2(Movement.x / 1.5f, Movement.y / 1.5f) * Speed * Time.fixedDeltaTime);
+                if (Mathf.Abs(Movement.x) == 1)
+                {
+                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(Movement.x, 0, 0), .2f, gameController.Instance.OreDetector))
+                    {
+                        DestPoint.position += new Vector3(Movement.x, 0, 0);
+                    }
+                }
+                if(Mathf.Abs(Movement.y) == 1)
+                {
+                    if (!Physics2D.OverlapCircle(DestPoint.position + new Vector3(0, Movement.y, 0), .2f, gameController.Instance.OreDetector))
+                    {
+                        DestPoint.position += new Vector3(0, Movement.y, 0);
+                    }
+                }
             }
-            else
-            {
-                rb.MovePosition(rb.position + Movement * Speed * Time.fixedDeltaTime);
-            }
-        }
     }
     void Mining()
     {
-        if (Movement.x != 0 || Movement.y != 0)
+        Hitmarker.transform.position = new Vector3((int)HitMarker.x, (int)HitMarker.y, 0);
+        if (Mathf.Abs(Movement.x) == 1 || Mathf.Abs(Movement.y) == 1)
         {
-            HitMarker = new Vector2(transform.position.x + Movement.x, transform.position.y + Movement.y);
+            HitMarker = new Vector2((int)DestPoint.position.x + (int)Movement.x, (int)DestPoint.position.y + (int)Movement.y);
             Hitmarker.transform.position = HitMarker;
         }
         if (Input.GetKey(KeyCode.Z))
@@ -109,7 +122,32 @@ public class Player : MonoBehaviour
                     Application.Quit();
                 }
             }
-
+            RaycastHit2D OreHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.x - transform.position.x, HitMarker.y - transform.position.y), 1f, Controller.OreDetector);
+            if(OreHit.collider != null && HoldingBlock == false)
+            {
+                PickedBlockType = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y)._Type;
+                Block TempBlock = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y);
+                if (PickedBlockType != BlockType.Bedrock)
+                {
+                    Hitmarker.SetActive(true);
+                    Hitmarker.GetComponent<SpriteRenderer>().sprite = TempBlock.MyGameObject.GetComponent<SpriteRenderer>().sprite;
+                    TempBlock.HitPoints = 0;
+                    TempBlock.ChangeType(BlockType.Empty);
+                    HoldingBlock = true;
+                }
+            }
+            if(OreHit.collider == null && HoldingBlock == true)
+            {
+                Block PlacedBlock = Controller.GetBlockAt((int)Hitmarker.transform.position.x, (int)Hitmarker.transform.position.y);
+                if(PlacedBlock._Type == BlockType.Empty)
+                {
+                    PlacedBlock.ChangeType(PickedBlockType);
+                    Controller.CheckForNeighbourBlocks(PlacedBlock);
+                    PlacedBlock.MyGameObject.GetComponent<BoxCollider2D>().enabled = true;
+                    HoldingBlock = false;
+                    Hitmarker.GetComponent<SpriteRenderer>().sprite = Crosshair;
+                }
+            }
 
 
 

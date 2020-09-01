@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,12 +22,24 @@ public class UIController : MonoBehaviour
     }
     public void LoadNextLevel()
     {
-        SceneManager.LoadScene("LVL" + (gameController.Instance.LevelIndex+1), LoadSceneMode.Single);
+        SceneManager.LoadScene("LVL" + (gameController.Instance.LevelIndex+1));
         gameController.Instance.GenerateLevel(60,90);
+        GameObject DestPoint = new GameObject();
+        DestPoint.transform.position = Player.Instance.transform.position;
+        Player.Instance.DestPoint = DestPoint.transform;
     }
     public void LoadShop()
     {
-        SceneManager.LoadScene("Shop", LoadSceneMode.Single);
+        SceneManager.sceneLoaded += LoadPlayerDest;
+        SceneManager.LoadScene("Shop");
+
+    }
+    void LoadPlayerDest(Scene Scene,LoadSceneMode mode)
+    {
+        GameObject DestPoint = new GameObject("DestPoint");
+        Debug.Log(DestPoint.transform.position);
+        DestPoint.transform.position = Player.Instance.transform.position;
+        Player.Instance.DestPoint = DestPoint.transform;
     }
 
 }
