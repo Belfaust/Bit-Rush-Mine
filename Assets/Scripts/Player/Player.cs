@@ -1,18 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; protected set; }
     public float Speed = 5f;
-    public int PickAxeSpeed= 5;
-    Vector2 Movement, HitMarker;
+    public int PickAxeSpeed= 5,TimeLimit = 90;
+    Vector2 Movement;
     public Transform DestPoint;
     public Rigidbody2D rb;
-    public GameObject Hitmarker;
+    public GameObject HitMarker;
     public Animator animator;
     public Sprite Crosshair;
     bool HoldingBlock = false;
@@ -75,15 +73,13 @@ public class Player : MonoBehaviour
     }
     void Mining()
     {
-        Hitmarker.transform.position = new Vector3((int)HitMarker.x, (int)HitMarker.y, 0);
-        if (Mathf.Abs(Movement.x) == 1 || Mathf.Abs(Movement.y) == 1)
+        if (Movement.x != 0 || Movement.y != 0)
         {
-            HitMarker = new Vector2((int)DestPoint.position.x + (int)Movement.x, (int)DestPoint.position.y + (int)Movement.y);
-            Hitmarker.transform.position = HitMarker;
+            HitMarker.transform.localPosition = new Vector2((int)Movement.x, (int)Movement.y);
         }
         if (Input.GetKey(KeyCode.Z))
         {
-            RaycastHit2D Blockhit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.x - transform.position.x, HitMarker.y - transform.position.y), 1f, Controller.OreDetector);
+            RaycastHit2D Blockhit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.OreDetector);
             if (Blockhit.collider != null)
             {
                 Block currentBlock = Controller.GetBlockAt((int)Blockhit.transform.position.x, (int)Blockhit.transform.position.y);
@@ -92,11 +88,11 @@ public class Player : MonoBehaviour
                     currentBlock.HitPoints -= PickAxeSpeed;
                     if (currentBlock.HitPoints <= 0)
                     {
-                        Controller.UpdateGold(currentBlock.GoldValue);
+                        UIController.Instance.UpdateGold(currentBlock.GoldValue);
                     }
                 }
             }
-            RaycastHit2D MobHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.x - transform.position.x, HitMarker.y - transform.position.y), 1f, Controller.MobDetector);
+            RaycastHit2D MobHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.MobDetector);
             if (MobHit.collider != null)
             {
                 Boss HittedBoss = MobHit.collider.GetComponent<Boss>();
@@ -108,7 +104,7 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.X))
         {
-            RaycastHit2D ButtonHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.x - transform.position.x, HitMarker.y - transform.position.y), 1f,Controller.ActionBlocks);
+            RaycastHit2D ButtonHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f,Controller.ActionBlocks);
             if (ButtonHit.collider != null)
             {
                 if (ButtonHit.transform.name == "StartBlock")
@@ -121,16 +117,19 @@ public class Player : MonoBehaviour
                 {
                     Application.Quit();
                 }
+                else if(ButtonHit.transform.tag == "NextLevel")
+                {
+                    UIController.Instance.LoadNextLevel();
+                }
             }
-            RaycastHit2D OreHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.x - transform.position.x, HitMarker.y - transform.position.y), 1f, Controller.OreDetector);
+            RaycastHit2D OreHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.OreDetector);
             if(OreHit.collider != null && HoldingBlock == false)
             {
                 PickedBlockType = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y)._Type;
                 Block TempBlock = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y);
                 if (PickedBlockType != BlockType.Bedrock)
                 {
-                    Hitmarker.SetActive(true);
-                    Hitmarker.GetComponent<SpriteRenderer>().sprite = TempBlock.MyGameObject.GetComponent<SpriteRenderer>().sprite;
+                    HitMarker.GetComponent<SpriteRenderer>().sprite = TempBlock.MyGameObject.GetComponent<SpriteRenderer>().sprite;
                     TempBlock.HitPoints = 0;
                     TempBlock.ChangeType(BlockType.Empty);
                     HoldingBlock = true;
@@ -138,14 +137,26 @@ public class Player : MonoBehaviour
             }
             if(OreHit.collider == null && HoldingBlock == true)
             {
-                Block PlacedBlock = Controller.GetBlockAt((int)Hitmarker.transform.position.x, (int)Hitmarker.transform.position.y);
+                Block PlacedBlock = Controller.GetBlockAt((int)HitMarker.transform.position.x, (int)HitMarker.transform.position.y);
                 if(PlacedBlock._Type == BlockType.Empty)
                 {
-                    PlacedBlock.ChangeType(PickedBlockType);
-                    Controller.CheckForNeighbourBlocks(PlacedBlock);
-                    PlacedBlock.MyGameObject.GetComponent<BoxCollider2D>().enabled = true;
-                    HoldingBlock = false;
-                    Hitmarker.GetComponent<SpriteRenderer>().sprite = Crosshair;
+                    if (Vector2.Distance(PlacedBlock.MyGameObject.transform.position, DestPoint.transform.position) > .5f)
+                    {
+                        PlacedBlock.ChangeType(PickedBlockType);
+                        Controller.CheckForNeighbourBlocks(PlacedBlock);
+                        PlacedBlock.MyGameObject.GetComponent<BoxCollider2D>().enabled = true;
+                        HoldingBlock = false;
+                        HitMarker.GetComponent<SpriteRenderer>().sprite = Crosshair;
+                    }
+                    else
+                    {
+                        DestPoint.transform.position = new Vector3((int)transform.position.x, (int)transform.position.y);
+                        PlacedBlock.ChangeType(PickedBlockType);
+                        Controller.CheckForNeighbourBlocks(PlacedBlock);
+                        PlacedBlock.MyGameObject.GetComponent<BoxCollider2D>().enabled = true;
+                        HoldingBlock = false;
+                        HitMarker.GetComponent<SpriteRenderer>().sprite = Crosshair;
+                    }
                 }
             }
 
@@ -153,18 +164,11 @@ public class Player : MonoBehaviour
 
         }
     }
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if(Input.GetKeyDown(KeyCode.X))
+        if(collision != null)
         {
-            if(collision.tag == "NextLevel")
-            {
-                UIController.Instance.LoadNextLevel();
-            }
-            if (collision.tag == "Shop")
-            {
-                UIController.Instance.LoadShop();
-            }
+         //   Debug.Log(collision.transform.name);
         }
     }
 }

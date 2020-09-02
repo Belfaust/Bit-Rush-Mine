@@ -7,7 +7,7 @@ public class FirstBoss : Boss
     private Transform PlayerPos;
     private void Awake()
     {
-         PlayerPos = gameController.Instance.Player.transform;
+         PlayerPos = Player.Instance.transform;
         Dest = new Vector3(Random.Range(5, gameController.Instance.Width - 5), Random.Range(5, gameController.Instance.Height - 5), 0);
     }
     void Update()
