@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
                 Block TempBlock = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y);
                 if (PickedBlockType != BlockType.Bedrock)
                 {
-                    HitMarker.GetComponent<SpriteRenderer>().sprite = TempBlock.MyGameObject.GetComponent<SpriteRenderer>().sprite;
+                    HitMarker.GetComponent<SpriteRenderer>().sprite = gameController.Instance.SpriteSlots[gameController.Instance.SpriteSlots.Length-1];
                     TempBlock.HitPoints = 0;
                     TempBlock.ChangeType(BlockType.Empty);
                     HoldingBlock = true;
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
                 Block PlacedBlock = Controller.GetBlockAt((int)HitMarker.transform.position.x, (int)HitMarker.transform.position.y);
                 if(PlacedBlock._Type == BlockType.Empty)
                 {
-                    if (Vector2.Distance(PlacedBlock.MyGameObject.transform.position, DestPoint.transform.position) > .5f)
+                    if (Vector2.Distance(PlacedBlock.MyGameObject.transform.position, DestPoint.transform.position) > .25f)
                     {
                         PlacedBlock.ChangeType(PickedBlockType);
                         Controller.CheckForNeighbourBlocks(PlacedBlock);
