@@ -79,6 +79,11 @@ public class FirstBoss : Boss
             if (gameController.Instance.GetBlockAt((int)collision.transform.position.x, (int)collision.transform.position.y)._Type != BlockType.Bedrock)
             gameController.Instance.GetBlockAt((int)collision.transform.position.x, (int)collision.transform.position.y).HitPoints -= 10;
         }
+        if(collision.transform.tag == "Player")
+        {
+            if(Player.Instance.Indestrucitble == false)
+            Player.Instance.Health -= 1;
+        }
     }
 
 
