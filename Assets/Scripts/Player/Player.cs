@@ -5,19 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; protected set; }
+    public int Hp;
+    public int Health { get => Hp;set { int oldhp = Hp;Hp = value; HealthCheck();}}
     public float Speed = 5f;
     public int PickAxeSpeed= 5,TimeLimit = 90;
-    Vector2 Movement;
     public Transform DestPoint;
     public Rigidbody2D rb;
     public GameObject HitMarker;
     public Animator animator;
-    public Sprite Crosshair;
-    bool HoldingBlock = false;
     public LayerMask MovementCollider;
-    BlockType PickedBlockType = BlockType.Empty;
-
     public gameController Controller;
+    public Sprite Crosshair;
+    public bool Indestrucitble = false;
+    private bool HoldingBlock = false;
+    private Vector2 Movement;
+
 
 
     void Start()
@@ -100,6 +102,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+    private BlockType PickedBlockType = BlockType.Empty;
     void PickingUpthings()
     {
         if(Input.GetKeyDown(KeyCode.X))
@@ -159,9 +162,20 @@ public class Player : MonoBehaviour
                     }
                 }
             }
-
-
-
+        }
+    }
+    void HealthCheck()
+    {
+        if (Hp > 0)
+        {
+            Indestrucitble = true;
+            UIController.Instance.PlayerHealthCheck();
+            StartCoroutine("IndectructibilityFrames");
+        }
+        else
+        {
+            UIController.Instance.LoadEndScreen();
+            StopAllCoroutines();
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
@@ -169,6 +183,15 @@ public class Player : MonoBehaviour
         if(collision != null)
         {
          //   Debug.Log(collision.transform.name);
+        }
+    }
+    IEnumerator IndectructibilityFrames()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3);
+            Indestrucitble = false;
+            break;
         }
     }
 }
