@@ -33,7 +33,7 @@ public class gameController : MonoBehaviour
         int seed = Random.Range(-100000, 100000);
         this.Width = width;
         this.Height = height;
-        GameObject Blocks = new GameObject("Blcoks");
+        GameObject Blocks = new GameObject("Blocks");
         GenerateBlockPrefab(Blocks);
         BlockList = new Block[Width, Height];
         float[,] noiseMap = NoiseMap.GenerateNoiseMap(Width, Height, seed, 50, 2, .5f, 3, new Vector2(5, 8));

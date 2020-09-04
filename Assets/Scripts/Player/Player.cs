@@ -7,17 +7,17 @@ public class Player : MonoBehaviour
     public static Player Instance { get; protected set; }
     public int Hp;
     public int Health { get => Hp;set { int oldhp = Hp;Hp = value; HealthCheck();}}
-    public float Speed = 5f;
-    public int PickAxeSpeed= 5,TimeLimit = 90;
+    public float Speed = 5f,AttackRate = 0.75f;
+    public int PickAxeStrength= 5,ArrowDamage = 25,TimeLimit = 90;
     public Transform DestPoint;
     public Rigidbody2D rb;
-    public GameObject HitMarker;
+    public GameObject HitMarker,ArrowPrefab;
     public Animator animator;
     public LayerMask MovementCollider;
     public gameController Controller;
     public Sprite Crosshair;
     public bool Indestrucitble = false;
-    private bool HoldingBlock = false;
+    private bool HoldingBlock = false, AttackCooldown = false, WeaponSwitch = false;
     private Vector2 Movement;
 
 
@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     {
         Mining();
         PickingUpthings();
+        SwitchingWeapons();
     }
     private void FixedUpdate()
     {
@@ -79,33 +80,45 @@ public class Player : MonoBehaviour
         {
             HitMarker.transform.localPosition = new Vector2((int)Movement.x, (int)Movement.y);
         }
-        if (Input.GetKey(KeyCode.Z))
+        if(Input.GetKey(KeyCode.Z)&&AttackCooldown == false)
         {
-            RaycastHit2D Blockhit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.OreDetector);
-            if (Blockhit.collider != null)
+            if (WeaponSwitch == false)
             {
-                Block currentBlock = Controller.GetBlockAt((int)Blockhit.transform.position.x, (int)Blockhit.transform.position.y);
-                if (currentBlock.HitPoints > 0 && currentBlock._Type != BlockType.Bedrock)
+                RaycastHit2D Blockhit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.OreDetector);
+                if (Blockhit.collider != null)
                 {
-                    currentBlock.HitPoints -= PickAxeSpeed;
-                    if (currentBlock.HitPoints <= 0)
+                    Block currentBlock = Controller.GetBlockAt((int)Blockhit.transform.position.x, (int)Blockhit.transform.position.y);
+                    if (currentBlock.HitPoints > 0 && currentBlock._Type != BlockType.Bedrock)
                     {
-                        UIController.Instance.UpdateGold(currentBlock.GoldValue);
+                        currentBlock.HitPoints -= PickAxeStrength;
+                        if (currentBlock.HitPoints <= 0)
+                        {
+                            UIController.Instance.UpdateGold(currentBlock.GoldValue);
+                        }
                     }
                 }
+                RaycastHit2D MobHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.MobDetector);
+                if (MobHit.collider != null)
+                {
+                    Boss HittedBoss = MobHit.collider.GetComponent<Boss>();
+                    HittedBoss.HitPoints -= 5;
+                }
+                StartCoroutine("AttackCD");
+
             }
-            RaycastHit2D MobHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.MobDetector);
-            if (MobHit.collider != null)
+            else
             {
-                Boss HittedBoss = MobHit.collider.GetComponent<Boss>();
-                HittedBoss.HitPoints -= 5;
+                Vector3 Dir = HitMarker.transform.localPosition;
+                GameObject arrow = Instantiate(ArrowPrefab,transform.position + Dir,Quaternion.identity);
+                arrow.GetComponent<ArrowMovement>().Move = Dir;
+                StartCoroutine("AttackCD");
             }
         }
     }
     private BlockType PickedBlockType = BlockType.Empty;
     void PickingUpthings()
     {
-        if(Input.GetKeyDown(KeyCode.X))
+        if(Input.GetKeyDown(KeyCode.X)&&WeaponSwitch == false)
         {
             RaycastHit2D ButtonHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f,Controller.ActionBlocks);
             if (ButtonHit.collider != null)
@@ -164,6 +177,20 @@ public class Player : MonoBehaviour
             }
         }
     }
+    void SwitchingWeapons()
+    {
+        if(Input.GetKeyDown(KeyCode.Space)&&HoldingBlock == false)
+        {
+            if(WeaponSwitch == false)
+            {
+                WeaponSwitch = true;
+            }
+            else
+            {
+                WeaponSwitch = false;
+            }
+        }
+    }
     void HealthCheck()
     {
         if (Hp > 0)
@@ -183,6 +210,16 @@ public class Player : MonoBehaviour
         if(collision != null)
         {
          //   Debug.Log(collision.transform.name);
+        }
+    }
+    IEnumerator AttackCD()
+    {
+        while (true)
+        {
+            AttackCooldown = true;
+            yield return new WaitForSeconds(AttackRate);
+            AttackCooldown = false;
+            break;
         }
     }
     IEnumerator IndectructibilityFrames()

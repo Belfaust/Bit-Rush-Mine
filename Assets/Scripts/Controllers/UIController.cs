@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     public static UIController Instance { get; protected set; }
     public GameObject HealthContainers,HeartPrefab;
     private List<GameObject> Hearts = new List<GameObject>();
+    public GameObject WeaponSlots;
     public Text Time;
     public Text GoldText;
 
@@ -38,7 +39,7 @@ public class UIController : MonoBehaviour
             {
                 if(i >= Hearts.Count)
                 {
-                    Hearts.Add(Instantiate(HeartPrefab,new Vector3((i*15)-15,144,0),Quaternion.identity, HealthContainers.transform));
+                    Hearts.Add(Instantiate(HeartPrefab,new Vector3((i*8)+3,142,0),Quaternion.identity, HealthContainers.transform));
                 }
                 else
                 {
@@ -57,7 +58,7 @@ public class UIController : MonoBehaviour
     public void UpdateGold(int goldAmount)
     {
         gameController.Instance.Gold += goldAmount;
-        GoldText.text = "Gold : " + gameController.Instance.Gold.ToString();
+        GoldText.text = gameController.Instance.Gold.ToString();
     }
     public void UpdateTime(int TimeValue)
     {

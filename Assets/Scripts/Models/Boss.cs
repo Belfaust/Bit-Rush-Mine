@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    private int HP = 10;
+    private int HP = 500;
     public int HitPoints { get => HP; set { int OldHP = HP; HP = value; HPCheck(); } }
     public int MaxEnergy = 100;
     public static int Energy = 0;

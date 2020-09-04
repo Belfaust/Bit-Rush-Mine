@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{BA4BBFC8-AAA8-791F-55F3-F3F04DF89C63}</ProjectGuid>
+    <ProjectGuid>{5756C2E4-8281-F642-3778-31710A145705}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\Models\Block.cs" />
     <Compile Include="Assets\Scripts\Models\Boss.cs" />
     <Compile Include="Assets\Scripts\Controllers\UIController.cs" />
+    <Compile Include="Assets\Scripts\Models\ArrowMovement.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -706,15 +707,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="AstarPathfindingProject.csproj">
-      <Project>{D609CF2B-BE36-7F3A-D5B3-60EF8DAD5FF1}</Project>
+      <Project>{A4A37BAA-35BE-61DC-B364-DF89ACB3C53D}</Project>
       <Name>AstarPathfindingProject</Name>
     </ProjectReference>
     <ProjectReference Include="PackageToolsEditor.csproj">
-      <Project>{70FC80D7-1DDC-085E-6EA5-3D00C4CCF99A}</Project>
+      <Project>{E20C5C5F-75AE-31D6-7C5A-02092AF05084}</Project>
       <Name>PackageToolsEditor</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
-      <Project>{F2F31AAC-5C83-EB4A-8C4F-D42F0C5CB2A5}</Project>
+      <Project>{DA555D84-8AED-56E9-7FE6-7A1094B8D4C4}</Project>
       <Name>AstarPathfindingProjectEditor</Name>
     </ProjectReference>
   </ItemGroup>
