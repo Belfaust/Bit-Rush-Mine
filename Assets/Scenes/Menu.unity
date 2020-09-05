@@ -1920,6 +1920,22 @@ PrefabInstance:
       propertyPath: Controller
       value: 
       objectReference: {fileID: 1545800677}
+    - target: {fileID: 9073340720369089477, guid: d994619f9e37f554da8157baf1b67eba, type: 3}
+      propertyPath: Hp
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9073340720369089477, guid: d994619f9e37f554da8157baf1b67eba, type: 3}
+      propertyPath: PickAxeStrength
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 9073340720369089477, guid: d994619f9e37f554da8157baf1b67eba, type: 3}
+      propertyPath: AttackRate
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9073340720369089477, guid: d994619f9e37f554da8157baf1b67eba, type: 3}
+      propertyPath: ArrowDamage
+      value: 75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d994619f9e37f554da8157baf1b67eba, type: 3}
 --- !u!1001 &2245683370915417843
@@ -2074,5 +2090,77 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameController
       objectReference: {fileID: 0}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: OreSprites.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[20]
+      value: 
+      objectReference: {fileID: 21300000, guid: 13869b18f65e7d04b81cb20680952edf, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[21]
+      value: 
+      objectReference: {fileID: 4021183171127385890, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[22]
+      value: 
+      objectReference: {fileID: 4021183171127385890, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: OreSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 47576f8a425d53c4bb5f7774a06f854e, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: OreSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 030fb4f0fc9463a4cb8da82000861028, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: OreSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 13869b18f65e7d04b81cb20680952edf, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[10]
+      value: 
+      objectReference: {fileID: 3985221016008397036, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[11]
+      value: 
+      objectReference: {fileID: 6116080786932476827, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[12]
+      value: 
+      objectReference: {fileID: 5778961287088506303, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[13]
+      value: 
+      objectReference: {fileID: -4827537604736492380, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[14]
+      value: 
+      objectReference: {fileID: -5587653796134901919, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[15]
+      value: 
+      objectReference: {fileID: -1762573714345474896, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[16]
+      value: 
+      objectReference: {fileID: -4272949958406870782, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[17]
+      value: 
+      objectReference: {fileID: -3627264120405484348, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[18]
+      value: 
+      objectReference: {fileID: -538331831730588137, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+    - target: {fileID: 8017579585817891855, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}
+      propertyPath: SpriteSlots.Array.data[19]
+      value: 
+      objectReference: {fileID: 4021183171127385890, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f46762bfecc1b8a4faadea6e63079f07, type: 3}

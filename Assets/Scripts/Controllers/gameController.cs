@@ -10,8 +10,7 @@ public class gameController : MonoBehaviour
     public Vector2Int Offset;
     public Block[,] BlockList;
     public int Gold = 0,LevelIndex = 0;
-    public Sprite[] SpriteSlots;
-    public Sprite[] GrassSprites;
+    public Sprite[] SpriteSlots, GrassSprites,OreSprites;
     public LayerMask OreDetector,MobDetector,ActionBlocks;
     public static gameController Instance { get; protected set;}
 
@@ -45,13 +44,30 @@ public class gameController : MonoBehaviour
                 GameObject Block = Instantiate(Blocks, new Vector3(x ,y, 0), Quaternion.identity);
                 BlockList[x, y] = new Block(x, y,Block,BlockType.Empty);
                 Block.name = "Block No." + x + "|" + y;
+                int RandomOre = Random.Range(1, 100);
                 if (y == 0 || y == Height-1 || x == 0 || x == Width-1)
                 {
                     BlockList[x, y]._Type = BlockType.Bedrock;
                 }
-                else if ((int)(noiseMap[x, y]*100) > 5&&(Random.Range(1,100)>5))
+                else if ((int)(noiseMap[x, y]*100) > 5&& RandomOre > 5)
                 {
-                    BlockList[x, y]._Type = BlockType.Stone;
+                    int Height = RandomOre;
+                    if (Height < 75)
+                    {
+                        BlockList[x, y]._Type = BlockType.Stone;
+                    }
+                    else if (Height > 75&& Height  < 85)
+                    {
+                        BlockList[x, y]._Type = BlockType.Coal;
+                    }
+                    else if(Height > 85&& Height <95)
+                    {
+                        BlockList[x, y]._Type = BlockType.Iron;
+                    }
+                    else if(Height < 95)
+                    {
+                        BlockList[x, y]._Type = BlockType.Gold;
+                    }
                 }
                 else
                 {
@@ -90,7 +106,8 @@ public class gameController : MonoBehaviour
                 Block tmpBlock = BlockList[x, y];
                  if (tmpBlock._Type != BlockType.Empty&&x!=0&&y!=0&&x!=Width-1&&y!= Height-1)
                 {
-                    CheckForNeighbourBlocks(BlockList[x, y]);
+                        CheckForNeighbourBlocks(BlockList[x, y]);
+                    tmpBlock.ChangeType(tmpBlock._Type);
                 }
                  else if(tmpBlock._Type == BlockType.Empty)
                 {
@@ -109,69 +126,87 @@ public class gameController : MonoBehaviour
         List<int> specialvals = new List<int> {2,7,13,15};
         List<int> specialvalsCalc = new List<int> { 115, 1015, 2015, 3007, 3115, 3013, 3007, 3015, 3113, 3115, 4002, 4115, 5014, 5015, 5108, 5115, 6015, 6100, 6115, 8115, 9015 };
         Vector2 position = new Vector2(myblock.X, myblock.Y);
-        if (SpriteSlots.Length < 9) return;
-        int index = (GetBlockAt(position + Vector2.up) ? 1 : 0)
-                + (GetBlockAt(position + Vector2.right) ? 2 : 0)
-                + (GetBlockAt(position + Vector2.down) ? 4 : 0)
-                + (GetBlockAt(position + Vector2.left) ? 8 : 0);
-
-        if (specialvals.Contains(index))
+        if (myblock._Type == BlockType.Stone)
         {
-            int tmpI = index;
-            tmpI += (GetBlockAt(position + Vector2.up + Vector2.left) ? 100 : 0);
-            tmpI += (GetBlockAt(position + Vector2.left + Vector2.down) ? 5000 : 0);
-            tmpI += (GetBlockAt(position + Vector2.right + Vector2.down) ? 1000 : 0);
-            tmpI += (GetBlockAt(position + Vector2.right + Vector2.up) ? 3000 : 0);
-            if (specialvalsCalc.Contains(tmpI))
+            if (SpriteSlots.Length < 9) return;
+            int index = (GetBlockAt(position + Vector2.up) ? 1 : 0)
+                    + (GetBlockAt(position + Vector2.right) ? 2 : 0)
+                    + (GetBlockAt(position + Vector2.down) ? 4 : 0)
+                    + (GetBlockAt(position + Vector2.left) ? 8 : 0);
+
+            if (specialvals.Contains(index))
             {
-                index = tmpI;
+                int tmpI = index;
+                tmpI += (GetBlockAt(position + Vector2.up + Vector2.left) ? 100 : 0);
+                tmpI += (GetBlockAt(position + Vector2.left + Vector2.down) ? 5000 : 0);
+                tmpI += (GetBlockAt(position + Vector2.right + Vector2.down) ? 1000 : 0);
+                tmpI += (GetBlockAt(position + Vector2.right + Vector2.up) ? 3000 : 0);
+                if (specialvalsCalc.Contains(tmpI))
+                {
+                    index = tmpI;
+                }
+            }
+
+            Sprite slot = SpriteSlots[19];
+            switch (index)
+            {
+
+                case 1: slot = SpriteSlots[18]; break;
+                case 2: slot = SpriteSlots[14]; break;
+                case 4: slot = SpriteSlots[17]; break;
+                case 5: slot = SpriteSlots[15]; break;
+                case 8: slot = SpriteSlots[13]; break;
+
+
+                case 3: slot = SpriteSlots[10]; break;
+                case 6: slot = SpriteSlots[0]; break;
+                case 7: slot = SpriteSlots[5]; break;
+                case 9: slot = SpriteSlots[12]; break;
+                //left and right
+                case 10: slot = SpriteSlots[16]; break;
+                case 11: slot = SpriteSlots[11]; break;
+                case 12: slot = SpriteSlots[2]; break;
+                case 13: slot = SpriteSlots[7]; break;
+                case 14: slot = SpriteSlots[1]; break;
+
+                case 15: slot = SpriteSlots[6]; break;
+                case 115: slot = SpriteSlots[9]; break;
+                case 1015: slot = SpriteSlots[3]; break;
+                case 1115: slot = SpriteSlots[4]; break;
+                case 5015: slot = SpriteSlots[4]; break;
+                case 4115: slot = SpriteSlots[4]; break;
+                case 5115: slot = SpriteSlots[6]; break;
+                case 6015: slot = SpriteSlots[6]; break;
+                case 3115: slot = SpriteSlots[6]; break;
+                case 3013: slot = SpriteSlots[8]; break;
+                case 3113: slot = SpriteSlots[8]; break;
+                case 3007: slot = SpriteSlots[9]; break;
+                case 3015: slot = SpriteSlots[6]; break;
+                case 4002: slot = SpriteSlots[14]; break;
+                case 5014: slot = SpriteSlots[6]; break;
+                case 5108: slot = SpriteSlots[7]; break;
+                case 6100: slot = SpriteSlots[8]; break;
+                case 6115: slot = SpriteSlots[8]; break;
+                case 8115: slot = SpriteSlots[3]; break;
+                case 9015: slot = SpriteSlots[9]; break;
+            }
+            myblock.MyGameObject.GetComponent<SpriteRenderer>().sprite = slot;
+        }
+        else
+        {
+            if (myblock._Type == BlockType.Coal)
+            {
+                myblock.MyGameObject.GetComponent<SpriteRenderer>().sprite = OreSprites[0];
+            }
+            else if (myblock._Type == BlockType.Iron)
+            {
+                myblock.MyGameObject.GetComponent<SpriteRenderer>().sprite = OreSprites[1];
+            }
+            else if (myblock._Type == BlockType.Gold)
+            {
+                myblock.MyGameObject.GetComponent<SpriteRenderer>().sprite = OreSprites[2];
             }
         }
-
-        Sprite slot = SpriteSlots[19];
-        switch (index)
-        {
-
-            case 1: slot = SpriteSlots[18]; break;
-            case 2: slot = SpriteSlots[14]; break;
-            case 4: slot = SpriteSlots[17]; break;
-            case 5: slot = SpriteSlots[15]; break;
-            case 8: slot = SpriteSlots[13]; break;
-
-
-            case 3: slot = SpriteSlots[10]; break;
-            case 6: slot = SpriteSlots[0]; break;
-            case 7: slot = SpriteSlots[5]; break;
-            case 9: slot = SpriteSlots[12]; break;
-            //left and right
-            case 10: slot = SpriteSlots[16]; break;
-            case 11: slot = SpriteSlots[11]; break;
-            case 12: slot = SpriteSlots[2]; break;
-            case 13: slot = SpriteSlots[7]; break;
-            case 14: slot = SpriteSlots[1]; break;
-
-            case 15: slot = SpriteSlots[6]; break;
-            case 115: slot = SpriteSlots[9]; break;
-            case 1015: slot = SpriteSlots[3]; break;
-            case 1115: slot = SpriteSlots[4]; break;
-            case 5015: slot = SpriteSlots[4]; break;
-            case 4115: slot = SpriteSlots[4]; break;
-            case 5115: slot = SpriteSlots[6]; break;
-            case 6015: slot = SpriteSlots[6]; break;
-            case 3115: slot = SpriteSlots[6]; break;
-            case 3013: slot = SpriteSlots[8]; break;
-            case 3113: slot = SpriteSlots[8]; break;
-            case 3007: slot = SpriteSlots[9]; break;
-            case 3015: slot = SpriteSlots[6]; break;
-            case 4002: slot = SpriteSlots[14]; break;
-            case 5014: slot = SpriteSlots[6]; break;
-            case 5108: slot = SpriteSlots[7]; break;
-            case 6100: slot = SpriteSlots[8]; break;
-            case 6115: slot = SpriteSlots[8]; break;
-            case 8115: slot = SpriteSlots[3]; break;
-            case 9015: slot = SpriteSlots[9]; break;
-        }
-        myblock.MyGameObject.GetComponent<SpriteRenderer>().sprite = slot;
     }
     public IEnumerator LevelTimer(int TimeLimit)
     {

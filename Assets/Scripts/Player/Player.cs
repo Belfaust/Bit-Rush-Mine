@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         DestPoint.parent = null;
         if (Instance != null)
@@ -145,7 +145,7 @@ public class Player : MonoBehaviour
                 Block TempBlock = Controller.GetBlockAt((int)OreHit.transform.position.x, (int)OreHit.transform.position.y);
                 if (PickedBlockType != BlockType.Bedrock)
                 {
-                    HitMarker.GetComponent<SpriteRenderer>().sprite = gameController.Instance.SpriteSlots[gameController.Instance.SpriteSlots.Length-1];
+                    HitMarker.GetComponent<SpriteRenderer>().sprite = TempBlock.MyGameObject.GetComponent<SpriteRenderer>().sprite;
                     TempBlock.HitPoints = 0;
                     TempBlock.ChangeType(BlockType.Empty);
                     HoldingBlock = true;

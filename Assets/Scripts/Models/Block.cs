@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum BlockType {Empty,Stone,Iron,Gold,Bedrock};
+public enum BlockType {Empty,Stone,Coal,Iron,Gold,Bedrock};
 public class Block
 {
     public BlockType _Type = BlockType.Empty;
@@ -53,24 +53,26 @@ public class Block
         }
         else if(ChangedType == BlockType.Iron)
         {
-            HitPoints = 250;
+            HitPoints = 200;
             GoldValue = 50;
         }
         else if(ChangedType == BlockType.Gold)
         {
-            HitPoints = 500;
-            GoldValue = 150;
+            HitPoints = 300;
+            GoldValue = 100;
         }
         if(_Type != BlockType.Bedrock)
         {
+
             gameController Controller = gameController.Instance;
+
             if (Controller.BlockList[X + 1, Y]._Type != BlockType.Empty && Controller.BlockList[X + 1, Y].X != Controller.Width - 1)
                 Controller.CheckForNeighbourBlocks(Controller.BlockList[X + 1, Y]);
             if (Controller.BlockList[X, Y + 1]._Type != BlockType.Empty && Controller.BlockList[X, Y + 1].Y != Controller.Height - 1)
                 Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y + 1]);
-            if (Controller.BlockList[X - 1, Y]._Type != BlockType.Empty && Controller.BlockList[X - 1, Y].X != 0)
+            if (Controller.BlockList[X - 1, Y]._Type != BlockType.Empty && Controller.BlockList[X - 1, Y].X < 1)
                 Controller.CheckForNeighbourBlocks(Controller.BlockList[X - 1, Y]);
-            if (Controller.BlockList[X, Y - 1]._Type != BlockType.Empty && Controller.BlockList[X, Y - 1].Y != 0)
+            if (Controller.BlockList[X, Y - 1]._Type != BlockType.Empty && Controller.BlockList[X, Y - 1].Y < 1)
                 Controller.CheckForNeighbourBlocks(Controller.BlockList[X, Y - 1]);
         }
     }
