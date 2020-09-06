@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Mining();
-        PickingUpthings();
+        //PickingUpthings();
         SwitchingWeapons();
     }
     private void FixedUpdate()
@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
         {
             HitMarker.transform.localPosition = new Vector2((int)Movement.x, (int)Movement.y);
         }
-        if(Input.GetKey(KeyCode.Z)&&AttackCooldown == false)
+        if(Input.GetKey(KeyCode.Z)&&AttackCooldown == false&& UIController.Instance.CanShoot == true)
         {
             if (WeaponSwitch == false)
             {
@@ -112,8 +112,8 @@ public class Player : MonoBehaviour
             else
             {
                 Vector3 Dir = HitMarker.transform.localPosition;
-                GameObject arrow = Instantiate(ArrowPrefab,transform.position + Dir,Quaternion.identity);
-                arrow.GetComponent<ArrowMovement>().Move = Dir;
+                    GameObject arrow = Instantiate(ArrowPrefab, transform.position + Dir, Quaternion.identity);
+                    arrow.GetComponent<ArrowMovement>().Move = Dir;
                 StartCoroutine("AttackCD");
             }
         }
@@ -164,15 +164,17 @@ public class Player : MonoBehaviour
     }
     void SwitchingWeapons()
     {
-        if(Input.GetKeyDown(KeyCode.Space)&&HoldingBlock == false)
+        if(Input.GetKeyDown(KeyCode.X)&&HoldingBlock == false)
         {
             if(WeaponSwitch == false)
             {
                 WeaponSwitch = true;
+                UIController.Instance.Weapon.text = "Bow";
             }
             else
             {
                 WeaponSwitch = false;
+                UIController.Instance.Weapon.text = "PickAxe";
             }
         }
     }
@@ -186,8 +188,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            UIController.Instance.LoadEndScreen();
-            StopAllCoroutines();
+            UIController.Instance.LoadMenu();
         }
     }
     IEnumerator AttackCD()
@@ -253,7 +254,7 @@ public class Player : MonoBehaviour
             {
                 Controller.Gold -= ShopController.Instance.RateCost;
                 AttackRateLevel += 1;
-                AttackRate -= 0.1f;
+                AttackRate -= 0.05f;
                 ShopController.Instance.CalculateCost();
                 UIController.Instance.UpdateGold();
             }

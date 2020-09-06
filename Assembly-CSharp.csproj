@@ -57,17 +57,18 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controllers\gameController.cs" />
     <Compile Include="Assets\Scripts\Models\ArrowMovement.cs" />
+    <Compile Include="Assets\Scripts\Controllers\ShopController.cs" />
     <Compile Include="Assets\Scripts\Utility\NoiseMap.cs" />
     <Compile Include="Assets\Scripts\Bosses\FirstBoss.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Models\Block.cs" />
-    <Compile Include="Assets\Scripts\Models\Boss.cs" />
-    <Compile Include="Assets\Scripts\Controllers\UIController.cs" />
-    <Compile Include="Assets\Scripts\Models\ProjectileMovement.cs" />
-    <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\ShopController.cs" />
     <Compile Include="Assets\Scripts\Controllers\MenuController.cs" />
     <Compile Include="Assets\Scripts\Utility\GameLoader.cs" />
+    <Compile Include="Assets\Scripts\Models\ProjectileMovement.cs" />
+    <Compile Include="Assets\Scripts\Models\Boss.cs" />
+    <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\UIController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\EndScreenController.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

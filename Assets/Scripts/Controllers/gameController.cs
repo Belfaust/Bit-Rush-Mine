@@ -14,7 +14,7 @@ public class gameController : MonoBehaviour
     public LayerMask OreDetector,MobDetector,ActionBlocks;
     public int HighScore;
     public GameObject ShopHole;
-    //public Animator[] OresAnim;
+    public RuntimeAnimatorController[] OresAnim;
     public static gameController Instance { get; protected set;}
 
     private void Awake()
@@ -101,7 +101,7 @@ public class gameController : MonoBehaviour
                 Block tmpBlock = BlockList[x, y];
                  if (tmpBlock._Type != BlockType.Empty&&x!=0&&y!=0&&x!=Width-1&&y!= Height-1)
                 {
-                        CheckForNeighbourBlocks(BlockList[x, y]);
+                    CheckForNeighbourBlocks(BlockList[x, y]);
                     tmpBlock.ChangeType(tmpBlock._Type);
                 }
                  else if(tmpBlock._Type == BlockType.Empty)

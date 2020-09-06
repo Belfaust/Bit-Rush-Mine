@@ -8,6 +8,7 @@ public class ShopController : MonoBehaviour
 {
     public Text ArrowDMG, PickAxeDMG, AttackRate;
     public Text ArrowDMGCost, PickAxeDMGCost, AttackRateCost;
+    public Text GoldCount;
     public static ShopController Instance;
     public int ArrowCost,PickAxeCost,RateCost;
     Player Playercontroller;
@@ -28,6 +29,7 @@ public class ShopController : MonoBehaviour
     void Update()
     {
         UpdateShop();
+        GoldCount.text = "Gold:" + gameController.Instance.Gold.ToString();
     }
     void UpdateShop()
     {
