@@ -5,14 +5,20 @@ using UnityEngine;
 public class FirstBoss : Boss
 {
     private Transform PlayerPos;
+    private bool Attacking = false;
+    private Vector2[] Directions = new Vector2[] {new Vector2(1,1), new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0)};
+    private Animator Animat;
+    public int ProjectileDamage = 100;
+    public GameObject Projectile;
     private void Awake()
     {
          PlayerPos = Player.Instance.transform;
         Dest = new Vector3(Random.Range(5, gameController.Instance.Width - 5), Random.Range(5, gameController.Instance.Height - 5), 0);
+        Animat = transform.gameObject.GetComponent<Animator>();
     }
     void Update()
     {
-        if (Vector2.Distance(transform.position, PlayerPos.position) > 15)
+        if (Vector2.Distance(transform.position, PlayerPos.position) > 10)
         {
             TraverseRandomly();
         }
@@ -40,7 +46,26 @@ public class FirstBoss : Boss
     void AttackPlayer()
     {
         Speed = 2.5f;
-        Move(PlayerPos.position);
+        if (Attacking == false)
+        {
+            Move(PlayerPos.position);
+        }
+        if (Vector2.Distance(transform.position, PlayerPos.position) > 5&&Attacking== false)
+        {
+            Animat.SetTrigger("Attack");
+            StartCoroutine(AttackN1());
+            Attacking = true;
+            int AttackPattern = Random.Range(0,2);
+
+            //    if(AttackPattern == 0)
+            //        {
+            //            AttackN1();
+            //        }
+            //    else if(AttackPattern == 1)
+            //{
+            //    AttackN2();
+            //}
+        }
     }
     void Move(Vector3 Destination)
     {
@@ -85,7 +110,35 @@ public class FirstBoss : Boss
             Player.Instance.Health -= 1;
         }
     }
+    IEnumerator AttackN1()
+    {
+        while (true)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                for (int i = 0; i < Directions.Length; i++)
+                {
+                    GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
+                    ShootProjectiles(projectile, Directions[i]*100);
+                    yield return new WaitForSeconds(.2f);
+                }
+            }
+            yield return new WaitForSeconds(3f);
+            Attacking = false;
+            break;
+        }
+    }
+    IEnumerator AttackN2()
+    {
+        while(true)
+        {
 
-
+        }
+    }
+    void ShootProjectiles(GameObject Shots,Vector2 Force)
+    {
+        Rigidbody2D rb = Shots.GetComponent<Rigidbody2D>();
+        rb.AddForce(Force);
+    }
 
 }

@@ -9,18 +9,30 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: b4a64e003d166484e882641f7fae2f82
   - enabled: 1
-    path: Assets/Scenes/Shop.unity
+    path: Assets/Scenes/StartLocation.unity
     guid: 181fefe73c4c8c5438bf4a65158ea6b3
   - enabled: 1
-    path: Assets/Scenes/LVL1.unity
+    path: Assets/Scenes/LVLs/LVL1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/LVL2.unity
+    path: Assets/Scenes/LVLs/LVL2.unity
     guid: c07c6e24d99a6ea429c63cac30efb780
   - enabled: 1
-    path: Assets/Scenes/LVL3.unity
+    path: Assets/Scenes/LVLs/LVL3.unity
     guid: 2dc1749f563db044dbfd5de8c414b403
   - enabled: 1
     path: Assets/Scenes/EndScreen.unity
     guid: 5366c0b9c7dc21340a6fca0920a514ba
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: bcfa3a36d9edad74e9b7499f585d1d65
+  - enabled: 1
+    path: Assets/Scenes/TransitionScene.unity
+    guid: 7e9da95e56f897542a5dc5bfb244036d
+  - enabled: 1
+    path: Assets/Scenes/LVLs/LVL4.unity
+    guid: 9a0a81c97fdff544897493729b6d322c
+  - enabled: 1
+    path: Assets/Scenes/LVLs/LVL5.unity
+    guid: c040ddf3140d17742b12d5e1e9b06870
   m_configObjects: {}

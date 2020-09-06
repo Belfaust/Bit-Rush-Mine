@@ -8,6 +8,7 @@ TagManager:
   - EnemyMob
   - NextLevel
   - Shop
+  - Hub
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Block
   - EnemyMob
   - ActionBlocks
-  - 
+  - CamBoxLayer
   - 
   - 
   - 

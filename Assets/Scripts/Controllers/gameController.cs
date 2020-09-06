@@ -9,9 +9,12 @@ public class gameController : MonoBehaviour
     public int Width, Height;
     public Vector2Int Offset;
     public Block[,] BlockList;
-    public int Gold = 0,LevelIndex = 0;
+    public int Gold = 0,LevelIndex = 0,BossCount = 0;
     public Sprite[] SpriteSlots, GrassSprites,OreSprites;
     public LayerMask OreDetector,MobDetector,ActionBlocks;
+    public int HighScore;
+    public GameObject ShopHole;
+    //public Animator[] OresAnim;
     public static gameController Instance { get; protected set;}
 
     private void Awake()
@@ -75,18 +78,7 @@ public class gameController : MonoBehaviour
                 }
             }
         }
-        Vector2Int BossPos = new Vector2Int();
-        BossPos.x = Random.value > 0.5f ? (int)Random.Range(10, 30f) : (int)Random.Range(Width-30, Width-10);
-        BossPos.y = Random.value > 0.5f ? (int)Random.Range(10, 20) : (int)Random.Range(Height-20,Height-10);
-        Instantiate(LevelBoss[LevelIndex], new Vector3(BossPos.x, BossPos.y,0), Quaternion.identity);
-        for(int x = BossPos.x; x < BossPos.x + 10; x++)
-        {
-            for (int y = BossPos.y; y < BossPos.y + 10; y++)
-            {
 
-                BlockList[x-5,y-5].ChangeType(BlockType.Empty);
-            }
-        }
         GameObject PlayerObject = Player.Instance.gameObject;
         PlayerObject.transform.position = new Vector2(Random.Range(40,Width-40), Random.Range(25, Height - 25));
         for (int x = (int)PlayerObject.transform.position.x; x < (int)PlayerObject.transform.position.x + 5; x++)
@@ -98,7 +90,10 @@ public class gameController : MonoBehaviour
             }
         }
 
-
+        for(int i = 0;i <LevelIndex+1;i++)
+        {
+            SpawnBoss();
+        }
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)
@@ -117,10 +112,25 @@ public class gameController : MonoBehaviour
 
             }
         }
+        BossCount = LevelIndex +1;
         StartCoroutine(LevelTimer(Player.Instance.TimeLimit));
     }
 
+    void SpawnBoss()
+    {
+        Vector2Int BossPos = new Vector2Int();
+        BossPos.x = Random.value > 0.5f ? (int)Random.Range(10, 30f) : (int)Random.Range(Width - 30, Width - 10);
+        BossPos.y = Random.value > 0.5f ? (int)Random.Range(10, 20) : (int)Random.Range(Height - 20, Height - 10);
+        Instantiate(LevelBoss[0], new Vector3(BossPos.x, BossPos.y, 0), Quaternion.identity);
+        for(int x = BossPos.x; x < BossPos.x + 10; x++)
+        {
+            for (int y = BossPos.y; y < BossPos.y + 10; y++)
+            {
 
+                BlockList[x - 5, y - 5].ChangeType(BlockType.Empty);
+            }
+        }
+    }
     public void CheckForNeighbourBlocks(Block myblock)
     {
         List<int> specialvals = new List<int> {2,7,13,15};

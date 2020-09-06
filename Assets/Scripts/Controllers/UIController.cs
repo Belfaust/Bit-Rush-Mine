@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; protected set; }
     public GameObject HealthContainers,HeartPrefab;
     private List<GameObject> Hearts = new List<GameObject>();
+    public AudioClip[] Music;
     public GameObject WeaponSlots;
     public Text Time;
     public Text GoldText;
@@ -29,6 +31,7 @@ public class UIController : MonoBehaviour
         SceneManager.sceneLoaded += LoadPlayerDest;
         UpdateGold(0);
         PlayerHealthCheck();
+        Player.Instance.Controller = gameController.Instance;
     }
     public void PlayerHealthCheck()
     {
@@ -58,6 +61,11 @@ public class UIController : MonoBehaviour
     public void UpdateGold(int goldAmount)
     {
         gameController.Instance.Gold += goldAmount;
+        gameController.Instance.HighScore += goldAmount;
+        GoldText.text = gameController.Instance.Gold.ToString();
+    }
+    public void UpdateGold()
+    {
         GoldText.text = gameController.Instance.Gold.ToString();
     }
     public void UpdateTime(int TimeValue)
@@ -66,6 +74,11 @@ public class UIController : MonoBehaviour
     }
     public void LoadNextLevel()
     {
+        if (Player.Instance.GetComponent<AudioSource>().clip != Music[1])
+        {
+            Player.Instance.GetComponent<AudioSource>().clip = Music[1];
+            Player.Instance.GetComponent<AudioSource>().Play();
+        }
         gameController GameContr = gameController.Instance;
         SceneManager.sceneLoaded -= GenerateLevel;
         SceneManager.sceneLoaded += GenerateLevel;
@@ -85,15 +98,34 @@ public class UIController : MonoBehaviour
     }
     public void LoadShop()
     {
-        SceneManager.sceneLoaded -= GenerateLevel;
+        Player.Instance.transform.position = new Vector3(14, 13, 0);
         SceneManager.LoadScene("Shop");
+        if (Player.Instance.GetComponent<AudioSource>().clip != Music[0])
+        {
+            Player.Instance.GetComponent<AudioSource>().clip = Music[0];
+            Player.Instance.GetComponent<AudioSource>().Play();
+        }
+    }
+    public void LoadStartingLocation()
+    {
+        SceneManager.sceneLoaded -= GenerateLevel;
+        SceneManager.LoadScene("StartLocation");
+        if (Player.Instance.GetComponent<AudioSource>().clip != Music[0])
+        {
+            Player.Instance.GetComponent<AudioSource>().clip = Music[0];
+            Player.Instance.GetComponent<AudioSource>().Play();
+        }
+        Player.Instance.transform.position = new Vector3(14, 12, 0);
+        Time.gameObject.SetActive(false);
+        CameraController.Instance.IndicatorOn = false;
     }
     void GenerateLevel(Scene Scene, LoadSceneMode mode)
     {
         gameController.Instance.GenerateLevel(60, 90);
         Player.Instance.DestPoint.gameObject.transform.position = Player.Instance.transform.position;
-        Debug.Log(Player.Instance.DestPoint.transform.position + " " + Player.Instance.transform.position);
-
+        CameraController.Instance.transform.position = Player.Instance.transform.position - new Vector3(0,0,10);
+        CameraController.Instance.IndicatorOn = true;
+        Time.gameObject.SetActive(true);
     }
     void LoadPlayerDest(Scene Scene,LoadSceneMode mode)
     {

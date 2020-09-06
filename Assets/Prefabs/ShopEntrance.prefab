@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2234952772904620507}
   m_Layer: 0
   m_Name: ShopEntrance
-  m_TagString: Shop
+  m_TagString: Hub
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,8 +97,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -6468910726198660926, guid: dff7e3e16ba5c02448ae9caed72014ee, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: e42a2e1f7ac24574bad43339c7fc2e95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

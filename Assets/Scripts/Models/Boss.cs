@@ -13,24 +13,21 @@ public class Boss : MonoBehaviour
     public Vector3 Dest;
 
 
-    public virtual void Ability1()
-    {
-
-    }
-    public virtual void Ability2()
-    {
-
-    }
-    public virtual void Ability3()
-    {
-
-    }
     public void HPCheck()
     {
         if(HitPoints < 1)
         {
             transform.gameObject.SetActive(false);
-            //Death anim
+            if(gameController.Instance.BossCount == 1)
+            {
+                CameraController.Instance.IndicatorOn = false;
+                gameController.Instance.LevelIndex += 1;
+                Instantiate(gameController.Instance.ShopHole,transform.position,Quaternion.identity);
+            }
+            else
+            {
+                gameController.Instance.BossCount -= 1;
+            }
         }
     }
 

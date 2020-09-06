@@ -61,11 +61,11 @@ public class Block
             HitPoints = 300;
             GoldValue = 100;
         }
+
+
         if(_Type != BlockType.Bedrock)
         {
-
             gameController Controller = gameController.Instance;
-
             if (Controller.BlockList[X + 1, Y]._Type != BlockType.Empty && Controller.BlockList[X + 1, Y].X != Controller.Width - 1)
                 Controller.CheckForNeighbourBlocks(Controller.BlockList[X + 1, Y]);
             if (Controller.BlockList[X, Y + 1]._Type != BlockType.Empty && Controller.BlockList[X, Y + 1].Y != Controller.Height - 1)

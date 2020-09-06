@@ -8,9 +8,9 @@ public class Player : MonoBehaviour
     public int Hp;
     public int Health { get => Hp;set { int oldhp = Hp;Hp = value; HealthCheck();}}
     public float Speed = 5f,AttackRate = 0.75f;
+    public int ArrowLevel = 1, PickaxeLevel = 1, AttackRateLevel = 1;
     public int PickAxeStrength= 5,ArrowDamage = 25,TimeLimit = 90;
     public Transform DestPoint;
-    public Rigidbody2D rb;
     public GameObject HitMarker,ArrowPrefab;
     public Animator animator;
     public LayerMask MovementCollider;
@@ -19,12 +19,15 @@ public class Player : MonoBehaviour
     public bool Indestrucitble = false;
     private bool HoldingBlock = false, AttackCooldown = false, WeaponSwitch = false;
     private Vector2 Movement;
+    private Rigidbody2D rb;
+
 
 
 
     void Awake()
     {
         DestPoint.parent = null;
+        rb = gameObject.GetComponent<Rigidbody2D>();
         if (Instance != null)
         {
             Debug.Log("Err there are 2 instances of gameControllers");
@@ -120,24 +123,6 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.X)&&WeaponSwitch == false)
         {
-            RaycastHit2D ButtonHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f,Controller.ActionBlocks);
-            if (ButtonHit.collider != null)
-            {
-                if (ButtonHit.transform.name == "StartBlock")
-                {
-                    UIController.Instance.LoadShop();
-                    transform.GetChild(0).gameObject.SetActive(true);
-                    UIController.Instance.transform.GetChild(0).gameObject.SetActive(true);
-                }
-                else if (ButtonHit.transform.name == "ExitBlock")
-                {
-                    Application.Quit();
-                }
-                else if(ButtonHit.transform.tag == "NextLevel")
-                {
-                    UIController.Instance.LoadNextLevel();
-                }
-            }
             RaycastHit2D OreHit = Physics2D.Raycast(transform.position, new Vector3(HitMarker.transform.position.x - transform.position.x, HitMarker.transform.position.y - transform.position.y), 1f, Controller.OreDetector);
             if(OreHit.collider != null && HoldingBlock == false)
             {
@@ -205,13 +190,6 @@ public class Player : MonoBehaviour
             StopAllCoroutines();
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if(collision != null)
-        {
-         //   Debug.Log(collision.transform.name);
-        }
-    }
     IEnumerator AttackCD()
     {
         while (true)
@@ -229,6 +207,56 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(3);
             Indestrucitble = false;
             break;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.transform.tag == "Shop")
+        {
+            UIController.Instance.LoadShop();
+        }
+        if(collision.transform.tag == "Hub")
+        {
+            gameController.Instance.StopAllCoroutines();
+            UIController.Instance.LoadStartingLocation();
+        }
+        if(collision.transform.tag == "NextLevel")
+        {
+            gameController.Instance.StopAllCoroutines();
+            UIController.Instance.LoadNextLevel();
+        }
+        if(collision.name == "ArrowUpgrade")
+        {
+            if(Controller.Gold >= ShopController.Instance.ArrowCost)
+            {
+                Controller.Gold -= ShopController.Instance.ArrowCost;
+                ArrowLevel += 1;
+                ArrowDamage += 10;
+                ShopController.Instance.CalculateCost();
+                UIController.Instance.UpdateGold();
+            }
+        }
+        if (collision.name == "PickAxeUpgrade")
+        {
+            if (Controller.Gold >= ShopController.Instance.PickAxeCost)
+            {
+                Controller.Gold -= ShopController.Instance.PickAxeCost;
+                PickaxeLevel += 1;
+                PickAxeStrength += 15;
+                ShopController.Instance.CalculateCost();
+                UIController.Instance.UpdateGold();
+            }
+        }
+        if (collision.name == "RateUpgrade")
+        {
+            if (Controller.Gold >= ShopController.Instance.RateCost)
+            {
+                Controller.Gold -= ShopController.Instance.RateCost;
+                AttackRateLevel += 1;
+                AttackRate -= 0.1f;
+                ShopController.Instance.CalculateCost();
+                UIController.Instance.UpdateGold();
+            }
         }
     }
 }
