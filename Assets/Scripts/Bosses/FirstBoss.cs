@@ -53,18 +53,16 @@ public class FirstBoss : Boss
         if (Vector2.Distance(transform.position, PlayerPos.position) > 5&&Attacking== false)
         {
             Animat.SetTrigger("Attack");
-            StartCoroutine(AttackN1());
             Attacking = true;
             int AttackPattern = Random.Range(0,2);
-
-            //    if(AttackPattern == 0)
-            //        {
-            //            AttackN1();
-            //        }
-            //    else if(AttackPattern == 1)
-            //{
-            //    AttackN2();
-            //}
+            if (AttackPattern == 0)
+            {
+                StartCoroutine(AttackN1());
+            }
+            else if (AttackPattern >= 1)
+            {
+                StartCoroutine(AttackN2());
+            }
         }
     }
     void Move(Vector3 Destination)
@@ -132,7 +130,17 @@ public class FirstBoss : Boss
     {
         while(true)
         {
-
+            for (int i = 0;i<8;i++)
+            {
+                Vector2 PlayerDir = new Vector2(Player.Instance.transform.position.x - transform.position.x, Player.Instance.transform.position.y - transform.position.y);
+                PlayerDir.Normalize();
+                GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
+                ShootProjectiles(projectile, PlayerDir*150);
+                yield return new WaitForSeconds(.5f);
+            }
+            yield return new WaitForSeconds(3f);
+            Attacking = false;
+            break;
         }
     }
     void ShootProjectiles(GameObject Shots,Vector2 Force)

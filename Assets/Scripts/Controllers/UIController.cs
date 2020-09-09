@@ -5,16 +5,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; protected set; }
     public GameObject HealthContainers,HeartPrefab;
-    private List<GameObject> Hearts = new List<GameObject>();
+    public List<GameObject> Hearts;
     public AudioClip[] Music;
-    public Text Weapon;
-    public Text Time;
-    public Text GoldText;
+    public TextMeshProUGUI Weapon;
+    public TextMeshProUGUI Time;
+    public TextMeshProUGUI GoldText;
     public bool CanShoot = false;
 
     void Start()
@@ -33,6 +34,10 @@ public class UIController : MonoBehaviour
         UpdateGold(0);
         PlayerHealthCheck();
         Player.Instance.Controller = gameController.Instance;
+        if(SceneManager.GetActiveScene().name == "TransitionScene")
+        {
+            LoadStartingLocation();
+        }
     }
     public void PlayerHealthCheck()
     {
@@ -41,12 +46,13 @@ public class UIController : MonoBehaviour
         {
             for(int i = 1;i < (HP > Hearts.Count ? (HP+1) : Hearts.Count);i++)
             {
-                if(i >= Hearts.Count)
-                {
-                    Hearts.Add(Instantiate(HeartPrefab,new Vector3((i*8)+3,142,0),Quaternion.identity, HealthContainers.transform));
-                }
-                else
-                {
+                //if(i >= Hearts.Count)
+                //{
+                //    Debug.Log((i * 8) - 64);
+                //   // Hearts.Add(Instantiate(HeartPrefab,new Vector3((i*8)-64,70,0),Quaternion.identity, HealthContainers.transform));
+                //   // Hearts.Add(Instantiate(HeartPrefab,new Vector3(0,0,0),Quaternion.identity, HealthContainers.transform));
+                //}
+
                     if (i+1 > HP)
                     {
                         Hearts[i].SetActive(false);
@@ -55,7 +61,7 @@ public class UIController : MonoBehaviour
                     {
                         Hearts[i].SetActive(true);
                     }
-                }
+
             }
         }
     }
@@ -71,7 +77,7 @@ public class UIController : MonoBehaviour
     }
     public void UpdateTime(int TimeValue)
     {
-        Time.text = TimeValue.ToString();
+        Time.text = (TimeValue-1).ToString();
     }
     public void LoadNextLevel()
     {

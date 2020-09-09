@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class ShopController : MonoBehaviour
 {
-    public Text ArrowDMG, PickAxeDMG, AttackRate;
-    public Text ArrowDMGCost, PickAxeDMGCost, AttackRateCost;
-    public Text GoldCount;
+    public TextMeshProUGUI ArrowDMG, PickAxeDMG, AttackRate;
+    public TextMeshProUGUI ArrowDMGCost, PickAxeDMGCost, AttackRateCost;
+    public TextMeshProUGUI GoldCount;
     public static ShopController Instance;
     public int ArrowCost,PickAxeCost,RateCost;
     Player Playercontroller;
